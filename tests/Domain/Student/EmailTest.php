@@ -1,9 +1,9 @@
 <?php
 
-namespace SophieCalixto\App\Tests;
+namespace SophieCalixto\App\Tests\Domain\Student;
 
 use PHPUnit\Framework\TestCase;
-use SophieCalixto\App\Email;
+use SophieCalixto\App\Domain\Student\Email;
 
 class EmailTest extends TestCase
 {

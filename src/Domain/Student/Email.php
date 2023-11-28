@@ -1,6 +1,6 @@
 <?php
 
-namespace SophieCalixto\App;
+namespace SophieCalixto\App\Domain\Student;
 
 class Email
 {
