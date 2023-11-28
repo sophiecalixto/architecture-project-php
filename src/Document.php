@@ -2,7 +2,6 @@
 
 namespace SophieCalixto\App;
 
-use http\Exception\InvalidArgumentException;
 
 class Document
 {
@@ -10,14 +9,19 @@ class Document
 
     public function __construct(string $document)
     {
-        $regex = "/^[0-9]{3}\.[0-9]{3}\.[0-9]{3}\-[0-9]{2}$/";
-        if(!preg_match($document, $regex)) {
-            throw new InvalidArgumentException("Invalid Document!");
+        $options = [
+            "options" => [
+                "regexp" => "/\d{3}\.\d{3}\.\d{3}\-\d{2}/"
+            ]
+        ];
+
+        if(!filter_var($document, FILTER_VALIDATE_REGEXP, $options)) {
+            throw new \InvalidArgumentException("Invalid Document!");
         }
         $this->document = $document;
     }
 
-    public function toString() : string
+    public function __toString() : string
     {
         return $this->document;
     }

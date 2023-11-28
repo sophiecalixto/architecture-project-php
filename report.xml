@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="4" assertions="4" errors="0" failures="0" skipped="0" time="0.016182">
+    <testsuite name="tests" tests="4" assertions="4" errors="0" failures="0" skipped="0" time="0.016182">
+      <testsuite name="SophieCalixto\App\Tests\DocumentTest" file="C:\Users\cyber\Documents\Estudos\architecture-project\tests\DocumentTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.012904">
+        <testcase name="testDocumentInInvalidFormatMustNotExist" file="C:\Users\cyber\Documents\Estudos\architecture-project\tests\DocumentTest.php" line="10" class="SophieCalixto\App\Tests\DocumentTest" classname="SophieCalixto.App.Tests.DocumentTest" assertions="1" time="0.011670"/>
+        <testcase name="testDocumentCanBeRepresentedAsString" file="C:\Users\cyber\Documents\Estudos\architecture-project\tests\DocumentTest.php" line="18" class="SophieCalixto\App\Tests\DocumentTest" classname="SophieCalixto.App.Tests.DocumentTest" assertions="1" time="0.001234"/>
+      </testsuite>
+      <testsuite name="SophieCalixto\App\Tests\EmailTest" file="C:\Users\cyber\Documents\Estudos\architecture-project\tests\EmailTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.003279">
+        <testcase name="testEmailInInvalidFormatMustNotExist" file="C:\Users\cyber\Documents\Estudos\architecture-project\tests\EmailTest.php" line="10" class="SophieCalixto\App\Tests\EmailTest" classname="SophieCalixto.App.Tests.EmailTest" assertions="1" time="0.002427"/>
+        <testcase name="testEmailCanBeRepresentedAsString" file="C:\Users\cyber\Documents\Estudos\architecture-project\tests\EmailTest.php" line="18" class="SophieCalixto\App\Tests\EmailTest" classname="SophieCalixto.App.Tests.EmailTest" assertions="1" time="0.000851"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>
