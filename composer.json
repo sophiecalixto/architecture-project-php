@@ -1,0 +1,19 @@
+{
+  "name": "sophiecalixto/architecture-project",
+  "description": "A clean architecture study project with php",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "sophiecalixto",
+      "email": "sophiecalixto2004@gmail.com"
+    }
+  ],
+    "autoload": {
+        "psr-4": {
+        "SophieCalixto\\App\\": "src/"
+        }
+    },
+  "require": {
+  }
+}
