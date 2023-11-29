@@ -8,16 +8,19 @@ class Student
     private Document $document;
     private Email $email;
     private array $phones;
-
-    public static function withNameDocumentAndEmail($name, $document, $email) : self
-    {
-        return new Student($name, new Document($document), new Email($email));
-    }
+    private string $password;
 
     public static function withNameDocumentEmailAndPhones($name, $document, $email, array $phones) : self
     {
         $student = new Student($name, new Document($document), new Email($email));
         $student->phones = $phones;
+        return $student;
+    }
+
+    public static function withNameDocumentEmailAndPassword($name, $document, $email, $password) : self
+    {
+        $student = new Student($name, new Document($document), new Email($email));
+        $student->password = $password;
         return $student;
     }
 
@@ -53,5 +56,10 @@ class Student
     public function phones() : array
     {
         return $this->phones;
+    }
+
+    public function password(): string
+    {
+        return $this->password;
     }
 }

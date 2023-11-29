@@ -27,11 +27,12 @@ class PDOStudentRepository implements StudentRepository
         try {
             $this->PDO->beginTransaction();
 
-            $sql = $this->PDO->prepare("INSERT INTO student (name, document, email) VALUES (:name, :document, :email)");
+            $sql = $this->PDO->prepare("INSERT INTO student (name, document, email, password) VALUES (:name, :document, :email, :password)");
             $sql->execute([
                 "name" => $student->name(),
                 "document" => $student->document(),
-                "email" => $student->email()
+                "email" => $student->email(),
+                "password" => $student->password() ?? null
             ]);
 
             $studentId = $this->PDO->lastInsertId();
@@ -160,6 +161,61 @@ class PDOStudentRepository implements StudentRepository
         } catch (\PDOException $e) {
             $this->PDO->rollBack();
             throw new \PDOException("Error when removing student by document: " . $e->getMessage());
+        }
+    }
+
+    public function changePassword(Student $student, string $oldPassword, string $newPassword): bool|\Exception
+    {
+        try {
+            if (!EncryptStudentPasswordServiceWithPhp::compare($student->password(), $oldPassword)) {
+                throw new \PDOException("Error when changing student password: Student doesn't exists or password is incorrect");
+            }
+
+            $sql = $this->PDO->prepare("UPDATE student SET password = :newPassword WHERE document = :document AND password = :oldPassword");
+            $sql->execute(
+                [
+                    "newPassword" => EncryptStudentPasswordServiceWithPhp::encrypt($newPassword),
+                    "document" => $student->document(),
+                    "oldPassword" => $student->password()
+                ]
+            );
+
+            if ($sql->rowCount() === 0) {
+                throw new \PDOException("Error when changing student password: Student doesn't exists or password is incorrect");
+            }
+
+            return true;
+        } catch (\PDOException $e) {
+            throw new \PDOException("Error when changing student password: " . $e->getMessage());
+        }
+    }
+
+    public function getAllInfoByDocument(Document $document): Student|\Exception
+    {
+        try {
+            $sql = $this->PDO->prepare("
+                SELECT s.id, s.name, s.document, s.email, s.password, p.country_code, p.ddd, p.number
+                FROM student s
+                LEFT JOIN phone p ON s.id = p.student_id
+                WHERE s.document = :document
+            ");
+            $sql->bindParam(":document", $document);
+            $sql->execute();
+            $studentData = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($studentData)) {
+                throw new \PDOException("Error when getting student by document: Student doesn't exists");
+            }
+
+            $student = Student::withNameDocumentEmailAndPassword($studentData[0]["name"], $studentData[0]["document"], $studentData[0]["email"], $studentData[0]["password"]);
+
+            foreach ($studentData as $row) {
+                $student->addPhone($row["country_code"], $row["ddd"], $row["number"]);
+            }
+
+            return $student;
+        } catch (\PDOException $e) {
+            throw new \PDOException("Error when getting student by document: " . $e->getMessage());
         }
     }
 }

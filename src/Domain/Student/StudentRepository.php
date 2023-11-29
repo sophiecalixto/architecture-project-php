@@ -16,4 +16,14 @@ interface StudentRepository
     public function getAll() : array|\Exception;
 
     public function removeByDocument(Document $document) : bool|\Exception;
+
+    /**
+     * @param Student $student
+     * @param string $oldPassword
+     * @param string $newPassword
+     * @return bool|\Exception
+     */
+    public function changePassword(Student $student, string $oldPassword, string $newPassword) : bool|\Exception;
+
+    public function getAllInfoByDocument(Document $document) : Student|\Exception;
 }
