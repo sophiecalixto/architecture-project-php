@@ -16,10 +16,4 @@ interface StudentRepository
     public function getAll() : array|\Exception;
 
     public function removeByDocument(Document $document) : bool|\Exception;
-
-    /**
-     * @param Document $document
-     * @return array|\Exception
-     */
-    public function getAllPhones(Document $document) : array|\Exception;
 }

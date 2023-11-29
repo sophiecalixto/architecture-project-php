@@ -69,7 +69,7 @@ class PDOStudentRepository implements StudentRepository
             $studentData = $sql->fetchAll(PDO::FETCH_ASSOC);
 
             if (empty($studentData)) {
-                return null;
+                throw new \PDOException("Error when getting student by document: Student doesn't exists");
             }
 
             $phones = [];
@@ -97,7 +97,7 @@ class PDOStudentRepository implements StudentRepository
             $studentData = $sql->fetchAll(PDO::FETCH_ASSOC);
 
             if (empty($studentData)) {
-                return null;
+                throw new \PDOException("Error when getting student by email: Student doesn't exists");
             }
 
             $phones = [];
@@ -160,24 +160,6 @@ class PDOStudentRepository implements StudentRepository
         } catch (\PDOException $e) {
             $this->PDO->rollBack();
             throw new \PDOException("Error when removing student by document: " . $e->getMessage());
-        }
-    }
-
-    public function getAllPhones(Document $document): array
-    {
-        try {
-            $sql = $this->PDO->prepare("SELECT country_code, ddd, number FROM phone WHERE document = :document");
-            $sql->bindParam(":document", $document);
-            $sql->execute();
-            $phoneList = [];
-
-            while ($phoneData = $sql->fetch(PDO::FETCH_ASSOC)) {
-                $phoneList[] = new Phone($phoneData["country_code"], $phoneData["ddd"], $phoneData["number"]);
-            }
-
-            return $phoneList;
-        } catch (\PDOException $e) {
-            throw new \PDOException("Error when getting all phones by document: " . $e->getMessage());
         }
     }
 }
