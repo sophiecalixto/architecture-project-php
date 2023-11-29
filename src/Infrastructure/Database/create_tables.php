@@ -35,7 +35,7 @@ try {
         )
     ");
 
-    echo "Sucess.\n";
+    echo "Success.\n";
 } catch (PDOException $e) {
     var_dump($host, $port, $dbname, $user, $password);
     die("ERROR: " . $e->getMessage());

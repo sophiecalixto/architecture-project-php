@@ -33,6 +33,9 @@ class PDOStudentRepositoryTest extends TestCase
         $this->repository = new PDOStudentRepository($this->pdo);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAddStudent(): void
     {
         $student = Student::withNameDocumentAndEmail('John Doe', '123.321.321-31', 'john.doe@example.com')
