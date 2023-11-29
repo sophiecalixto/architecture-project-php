@@ -115,30 +115,21 @@ class PDOStudentRepository implements StudentRepository
     public function getAll(): array
     {
         try {
-            $sql = $this->PDO->query("
+            $sql = $this->PDO->prepare("
                 SELECT s.id, s.name, s.document, s.email, p.country_code, p.ddd, p.number
                 FROM student s
                 LEFT JOIN phone p ON s.id = p.student_id
             ");
-            $students = [];
-            $currentStudentId = null;
-            $phones = [];
+            $sql->execute();
+            $studentData = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-            while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
-                if ($currentStudentId !== $row["document"]) {
-                    if ($currentStudentId !== null) {
-                        $students[] = Student::withNameDocumentEmailAndPhones($row["name"], $row["document"], $row["email"], $phones);
-                    }
-
-                    $currentStudentId = $row["document"];
-                    $phones = [];
-                }
-
-                $phones[] = new Phone($row["country_code"], $row["ddd"], $row["number"]);
+            if (empty($studentData)) {
+                throw new \PDOException("Error when getting all students: No students found");
             }
 
-            if ($currentStudentId !== null) {
-                $students[] = Student::withNameDocumentEmailAndPhones($row["name"], $row["document"], $row["email"], $phones);
+            $students = [];
+            foreach ($studentData as $row) {
+                $students[] = Student::withNameDocumentEmailAndPhones($row["name"], $row["document"], $row["email"], [new Phone($row["country_code"], $row["ddd"], $row["number"])]);
             }
 
             return $students;
@@ -153,8 +144,11 @@ class PDOStudentRepository implements StudentRepository
             $this->PDO->beginTransaction();
 
             $sql = $this->PDO->prepare("DELETE FROM student WHERE document = :document");
-            $sql->bindParam(":document", $document);
-            $sql->execute();
+            $sql->execute(
+                [
+                    "document" => $document
+                ]
+            );
 
             $this->PDO->commit();
             return true;
@@ -216,6 +210,48 @@ class PDOStudentRepository implements StudentRepository
             return $student;
         } catch (\PDOException $e) {
             throw new \PDOException("Error when getting student by document: " . $e->getMessage());
+        }
+    }
+
+    public function updateByDocument(Document $document, Student $student): Exception|bool
+    {
+        try {
+            $pdo = $this->PDO;
+            $pdo->beginTransaction();
+
+            $sql = $pdo->prepare("UPDATE student SET name = :name, email = :email WHERE document = :document");
+            $sql->execute(
+                [
+                    "name" => $student->name(),
+                    "email" => $student->email(),
+                    "document" => $document
+                ]
+            );
+
+            $getStudentId = $pdo->prepare("SELECT id FROM student WHERE document = :document");
+            $getStudentId->execute(
+                [
+                    "document" => $document
+                ]
+            );
+            $studentId = $getStudentId->fetch(PDO::FETCH_ASSOC)["id"];
+
+            $sqlPhone = $pdo->prepare("UPDATE phone SET country_code = :country_code, ddd = :ddd, number = :number WHERE student_id = :student_id");
+
+            foreach ($student->phones() as $phone) {
+                $sqlPhone->execute([
+                    "student_id" => $studentId,
+                    "country_code" => $phone->countryCode(),
+                    "ddd" => $phone->ddd(),
+                    "number" => $phone->number()
+                ]);
+            }
+
+            $pdo->commit();
+            return true;
+        } catch (\PDOException $e) {
+            $pdo->rollBack();
+            throw new \PDOException("Error when updating student by document: " . $e->getMessage());
         }
     }
 }

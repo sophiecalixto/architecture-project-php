@@ -26,4 +26,6 @@ interface StudentRepository
     public function changePassword(Student $student, string $oldPassword, string $newPassword) : bool|\Exception;
 
     public function getAllInfoByDocument(Document $document) : Student|\Exception;
+
+    public function updateByDocument(Document $document, Student $student) : bool|\Exception;
 }
