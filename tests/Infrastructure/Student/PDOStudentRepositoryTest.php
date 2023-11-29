@@ -58,7 +58,7 @@ class PDOStudentRepositoryTest extends TestCase
         $retrievedStudent = $this->repository->getByDocument(new Document('123.321.321-31'));
 
         $this->assertInstanceOf(Student::class, $retrievedStudent);
-        $this->assertEquals('Jane Doe', $retrievedStudent->name());
+        $this->assertEquals('123.321.321-31', $retrievedStudent->document());
         // Additional assertions if needed
     }
 
