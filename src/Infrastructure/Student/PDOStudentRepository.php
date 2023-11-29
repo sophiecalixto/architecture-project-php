@@ -59,9 +59,9 @@ class PDOStudentRepository implements StudentRepository
     {
         try {
             $sql = $this->PDO->prepare("
-                SELECT s.name, s.document, s.email, p.country_code, p.ddd, p.number
+                SELECT s.id, s.name, s.document, s.email, p.country_code, p.ddd, p.number
                 FROM student s
-                LEFT JOIN phone p ON s.document = p.document
+                LEFT JOIN phone p ON s.id = p.student_id
                 WHERE s.document = :document
             ");
             $sql->bindParam(":document", $document);
@@ -87,9 +87,9 @@ class PDOStudentRepository implements StudentRepository
     {
         try {
             $sql = $this->PDO->prepare("
-                SELECT s.name, s.document, s.email, p.country_code, p.ddd, p.number
+                SELECT s.id, s.name, s.document, s.email, p.country_code, p.ddd, p.number
                 FROM student s
-                LEFT JOIN phone p ON s.document = p.document
+                LEFT JOIN phone p ON s.id = p.student_id
                 WHERE s.email = :email
             ");
             $sql->bindParam(":email", $email);
@@ -115,9 +115,9 @@ class PDOStudentRepository implements StudentRepository
     {
         try {
             $sql = $this->PDO->query("
-                SELECT s.name, s.document, s.email, p.country_code, p.ddd, p.number
+                SELECT s.id, s.name, s.document, s.email, p.country_code, p.ddd, p.number
                 FROM student s
-                LEFT JOIN phone p ON s.document = p.document
+                LEFT JOIN phone p ON s.id = p.student_id
             ");
             $students = [];
             $currentStudentId = null;

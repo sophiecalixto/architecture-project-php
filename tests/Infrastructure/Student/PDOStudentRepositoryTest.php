@@ -1,12 +1,11 @@
 <?php
-namespace SophieCalixto\App\TEsts\Infrastructure\Student;
+
+namespace SophieCalixto\App\Tests\Infrastructure\Student;
 
 use PDO;
 use PHPUnit\Framework\TestCase;
 use SophieCalixto\App\Infrastructure\Student\PDOStudentRepository;
 use SophieCalixto\App\Domain\Student\Document;
-use SophieCalixto\App\Domain\Student\Email;
-use SophieCalixto\App\Domain\Student\Phone;
 use SophieCalixto\App\Domain\Student\Student;
 
 class PDOStudentRepositoryTest extends TestCase
@@ -17,8 +16,19 @@ class PDOStudentRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->pdo = new PDO('sqlite::memory:');
-        $this->pdo->exec('CREATE TABLE student (name TEXT, document TEXT, email TEXT)');
-        $this->pdo->exec('CREATE TABLE phone (student_id INTEGER, country_code TEXT, ddd TEXT, number TEXT)');
+
+        // Create the student table
+        $this->pdo->exec('CREATE TABLE student (id INTEGER PRIMARY KEY, document TEXT, name TEXT, email TEXT)');
+
+        // Create the phone table with a foreign key constraint
+        $this->pdo->exec('CREATE TABLE phone (
+            id INTEGER PRIMARY KEY,
+            student_id TEXT,
+            country_code TEXT,
+            ddd TEXT,
+            number TEXT,
+            FOREIGN KEY (student_id) REFERENCES student(id)
+        )');
 
         $this->repository = new PDOStudentRepository($this->pdo);
     }
@@ -31,7 +41,6 @@ class PDOStudentRepositoryTest extends TestCase
         $result = $this->repository->add($student);
 
         $this->assertTrue($result);
-
         // Additional assertions if needed
     }
 
@@ -39,7 +48,7 @@ class PDOStudentRepositoryTest extends TestCase
     {
         // Add a sample student to the database
         $sampleStudent = Student::withNameDocumentAndEmail('Jane Doe', '123.321.321-31', 'jane.doe@example.com')
-            ->addPhone('1', '321', '6543210');
+            ->addPhone('+55', '11', '999999999');
         $this->repository->add($sampleStudent);
 
         // Retrieve the student using getByDocument

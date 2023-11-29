@@ -14,9 +14,15 @@ class Student
         return new Student($name, new Document($document), new Email($email));
     }
 
+    public static function withNameDocumentEmailAndPhones($name, $document, $email, array $phones) : self
+    {
+        $student = new Student($name, new Document($document), new Email($email));
+        $student->phones = $phones;
+        return $student;
+    }
+
     public function __construct(string $name, Document $document, Email $email)
     {
-
         $this->name = $name;
         $this->document = $document;
         $this->email = $email;
@@ -33,14 +39,14 @@ class Student
         return $this->name;
     }
 
-    public function document() : string
+    public function document() : Document
     {
-        return $this->document();
+        return $this->document;
     }
 
-    public function email()
+    public function email() : Email
     {
-        return $this->email();
+        return $this->email;
     }
 
     /** @return Phone[] */
