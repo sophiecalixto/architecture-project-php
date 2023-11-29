@@ -20,6 +20,7 @@
   "require": {
     "ext-dom": "*",
     "ext-mbstring": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "phpmailer/phpmailer": "^6.9"
   }
 }
