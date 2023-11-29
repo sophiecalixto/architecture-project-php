@@ -43,5 +43,20 @@ class Phone
         return "$this->country_number ($this->ddd) $this->number";
     }
 
+    public function countryCode() : string
+    {
+        return $this->country_number;
+    }
+
+    public function ddd() : string
+    {
+        return $this->ddd;
+    }
+
+    public function number() : string
+    {
+        return $this->number;
+    }
+
 
 }

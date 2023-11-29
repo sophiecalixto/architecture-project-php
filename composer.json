@@ -18,6 +18,9 @@
     "phpunit/phpunit": "10"
   },
   "require": {
-    "ext-http": "*"
+    "ext-http": "*",
+    "ext-dom": "*",
+    "ext-mbstring": "*",
+    "ext-pdo": "*"
   }
 }
